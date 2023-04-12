@@ -19,11 +19,13 @@ spec:
     port: {{ .Values.prometheus.port }}
     protocol: TCP
     targetPort: prometheus
+  {{- if not .Values.proxy.enabled }}
   - name: envoy-metrics
     port: {{ .Values.proxy.prometheus.port }}
     protocol: TCP
     targetPort: envoy-metrics
-{{- else if .Values.proxy.prometheus.enabled }}
+  {{- end }}
+{{- else if and .Values.proxy.prometheus.enabled (not .Values.proxy.enabled) }}
 apiVersion: v1
 kind: Service
 metadata:
